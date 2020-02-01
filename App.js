@@ -1,7 +1,8 @@
+'use strict';
+
+
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-import Emojis from './src/components/Emojis';
 
 export default class extends React.Component {
 

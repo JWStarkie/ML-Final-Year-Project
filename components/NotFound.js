@@ -11,6 +11,7 @@ export default class NotFound extends React.Component {
         <Text style={{ textAlign: "center", color: "#333", marginBottom: 5 }}>
           Hello NotFound
         </Text>
+        {/* 2. Get the param, provide a fallback value if not available */}
         <Text>
           itemId: {JSON.stringify(navigation.getParam("itemId", "NO-ID"))}
         </Text>

@@ -2,8 +2,6 @@
 
 import React from "react";
 import { Button, View, Text } from "react-native";
-import NotFound from "./NotFound";
-import ML from "./ML";
 
 export default class Main extends React.Component {
   render() {
@@ -23,7 +21,7 @@ export default class Main extends React.Component {
           }
         />
         <Button
-          title="Go to MachineLearning Page"
+          title="Go to ML"
           onPress={() => this.props.navigation.navigate("ML")}
         />
       </View>

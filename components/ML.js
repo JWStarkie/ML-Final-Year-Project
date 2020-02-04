@@ -3,6 +3,13 @@
 import React from "react";
 import { Button, View } from "react-native";
 
+// Env files with Keys
+import EnvKeys from "./environment";
+
+// To access the keys and use
+// const key = EnvKeys.getAnotherApiKey();
+// console.log("key:" + key);
+
 import NavigationService from "utils/NavigationService.js";
 
 export default class ML extends React.Component {

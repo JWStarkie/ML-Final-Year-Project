@@ -4,7 +4,7 @@ import React from "react";
 import { Button, View } from "react-native";
 
 // Env files with Keys
-import EnvKeys from "./environment";
+// import EnvKeys from "../environment";
 
 // To access the keys and use
 // const key = EnvKeys.getAnotherApiKey();
@@ -15,7 +15,13 @@ import NavigationService from "utils/NavigationService.js";
 export default class ML extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
         <Button
           title="Camera Set Up"
           onPress={() =>

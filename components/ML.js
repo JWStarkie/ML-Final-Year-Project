@@ -23,18 +23,18 @@ export default class ML extends React.Component {
         }}
       >
         <Button
-          title="Camera Set Up"
+          title="Camera Set Up - Predict Vehicle"
           onPress={() =>
             NavigationService.navigate("CameraFunction", {
-              takePictureFunction: false
+              trainNewVehicle: false
             })
           }
         />
         <Button
-          title="Camera Set Up & Take Picture"
+          title="Camera Set Up - Train on New Vehicle"
           onPress={() =>
             NavigationService.navigate("CameraFunction", {
-              takePictureFunction: true
+              trainNewVehicle: true
             })
           }
         />

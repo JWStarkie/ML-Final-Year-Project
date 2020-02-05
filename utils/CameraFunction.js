@@ -1,7 +1,7 @@
 "use strict";
 
 import React, { Component } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 
 import { FontAwesome } from "@expo/vector-icons";
@@ -12,21 +12,16 @@ export default class CameraFunction extends Component {
   state = {
     hasPermission: null,
     type: Camera.Constants.Type.back,
-    takePictureFunction: null
+    processing: null
   };
 
   async componentDidMount() {
     const { status } = await Camera.requestPermissionsAsync();
-    const { navigation } = this.props;
     this.setState({ hasPermission: status === "granted" });
-    this.setState({
-      takePictureFunction: navigation.state.params.takePictureFunction
-    });
   }
 
   render() {
     const { hasPermission } = this.state;
-    // const { navigation } = this.props;
     if (hasPermission === null) {
       return <View />;
     } else if (hasPermission === false) {
@@ -70,14 +65,23 @@ export default class CameraFunction extends Component {
                 margin: 25
               }}
             >
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={{
-                  alignSelf: "flex-end",
+                  flex: 1,
+                  justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
+                  marginBottom: 5
                 }}
                 onPress={this.takePicture}
               >
+                {this.state.processing ? (
+                  <ActivityIndicator
+                    size="large"
+                    color="#0000ff"
+                    animating={this.state.processing}
+                  />
+                ) : null}
                 <FontAwesome
                   name="camera"
                   style={{
@@ -87,38 +91,7 @@ export default class CameraFunction extends Component {
                     padding: 10
                   }}
                 />
-              </TouchableOpacity> */}
-              {this.state.takePictureFunction ? (
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: "transparent",
-                    flexDirection: "row",
-                    justifyContent: "center"
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      justifyContent: "flex-end",
-                      alignItems: "center",
-                      backgroundColor: "transparent",
-                      marginBottom: 5
-                    }}
-                    onPress={this.takePicture}
-                  >
-                    <FontAwesome
-                      name="camera"
-                      style={{
-                        color: "#fff",
-                        fontSize: 40,
-                        backgroundColor: "#000",
-                        padding: 10
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ) : null}
+              </TouchableOpacity>
             </View>
           </Camera>
         </View>
@@ -126,14 +99,29 @@ export default class CameraFunction extends Component {
     }
   }
   takePicture = async () => {
+    this.setState({ processing: true });
     if (this.camera) {
-      await this.camera
-        .takePictureAsync({ skipProcessing: true })
-        .then(data => {
-          NavigationService.navigate("ImagePreview", {
-            imageUri: data.uri
+      if (this.props.navigation.state.params.trainNewVehicle) {
+        console.log("Train new vehicle");
+        await this.camera
+          .takePictureAsync({ skipProcessing: true })
+          .then(data => {
+            NavigationService.navigate("ImagePreview", {
+              imageUri: data.uri,
+              totrain: this.props.navigation.state.params.trainNewVehicle
+            });
           });
-        });
+      } else {
+        console.log("Not train new vehicle");
+        await this.camera
+          .takePictureAsync({ skipProcessing: true })
+          .then(data => {
+            NavigationService.navigate("ImagePreview", {
+              imageUri: data.uri,
+              totrain: this.props.navigation.state.params.trainNewVehicle
+            });
+          });
+      }
     }
   };
 }

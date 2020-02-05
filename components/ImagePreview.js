@@ -16,6 +16,9 @@ export default class ImagePreview extends React.Component {
           style={{ width: 200, height: 200 }}
           source={{ uri: navigation.state.params.imageUri }}
         />
+        <Text style={{ textAlign: "center", color: "#333", marginBottom: 5 }}>
+          itemId: {JSON.stringify(navigation.state.params.totrain)}
+        </Text>
       </View>
     );
   }

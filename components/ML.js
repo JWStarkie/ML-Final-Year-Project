@@ -4,13 +4,13 @@ import React from "react";
 import { Button, View } from "react-native";
 
 // Env files with Keys
-// import EnvKeys from "../environment";
+// import { API_KEY } from "react-native-dotenv";
 
 // To access the keys and use
-// const key = EnvKeys.getAnotherApiKey();
-// console.log("key:" + key);
+// console.log(API_KEY);
 
 import NavigationService from "utils/NavigationService.js";
+import AzureConnection from "utils/AzureConnection.js";
 
 export default class ML extends React.Component {
   render() {
@@ -23,9 +23,13 @@ export default class ML extends React.Component {
         }}
       >
         <Button
+          title="Test Function"
+          onPress={() => AzureConnection.predictVehicleMake()}
+        />
+        <Button
           title="Camera Set Up - Predict Vehicle"
           onPress={() =>
-            NavigationService.navigate("CameraFunction", {
+            NavigationService.navigate("AzureConnection", {
               trainNewVehicle: false
             })
           }

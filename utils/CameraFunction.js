@@ -6,6 +6,8 @@ import { Camera } from "expo-camera";
 
 import { FontAwesome } from "@expo/vector-icons";
 
+import AzureConnection from "utils/AzureConnection.js";
+
 import NavigationService from "./NavigationService";
 
 export default class CameraFunction extends Component {
@@ -112,14 +114,15 @@ export default class CameraFunction extends Component {
             });
           });
       } else {
-        console.log("Not train new vehicle");
+        console.log("Predict Vehicle");
         await this.camera
           .takePictureAsync({ skipProcessing: true })
           .then(data => {
-            NavigationService.navigate("ImagePreview", {
+            AzureConnection.predictVehicleMake();
+            /*             NavigationService.navigate("ImagePreview", {
               imageUri: data.uri,
               totrain: this.props.navigation.state.params.trainNewVehicle
-            });
+            }); */
           });
       }
     }

@@ -8,12 +8,14 @@ import {
   ITERATION_ID
 } from "react-native-dotenv";
 
+import NavigationService from "./NavigationService";
+
 const url =
   END_POINT + "/customvision/v3.0/training/projects/" + PROJECT_ID + "/tags";
 const key = TRAINING_API_KEY;
 const predi_url =
   END_POINT +
-  "/customvision/v3.0/Prediction/" +
+  "customvision/v3.0/prediction/" +
   PROJECT_ID +
   "/classify/iterations/" +
   ITERATION_ID +
@@ -49,13 +51,27 @@ function predictVehicleMake() {
       "Content-Type": "application/json",
       "Prediction-Key": pred_key
     },
-    body: JSON.stringify({
-      Url: testUrl
-    })
+    body: JSON.stringify({ Url: testUrl })
   })
     .then(response => response.json())
     .then(responseJson => {
-      console.log(responseJson);
+      console.log(responseJson.predictions);
+      let i;
+      for (i in responseJson.predictions) {
+        if (responseJson.predictions[i].probability > 0.9) {
+          console.log(
+            responseJson.predictions[i].probability * 100 +
+              "% chance it's a " +
+              responseJson.predictions[i].tagName
+          );
+          NavigationService.navigate("AR", {
+            probability: responseJson.predictions[i].probability * 100,
+            classification: responseJson.predictions[i].tagName
+          });
+        } else {
+          NavigationService.navigate("AR");
+        }
+      }
     })
     .catch(error => {
       console.error(error);

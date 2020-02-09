@@ -4,7 +4,8 @@ import {
   TRAINING_API_KEY,
   PREDICTION_API_KEY,
   END_POINT,
-  PROJECT_ID
+  PROJECT_ID,
+  ITERATION_ID
 } from "react-native-dotenv";
 
 const url =
@@ -14,7 +15,9 @@ const predi_url =
   END_POINT +
   "/customvision/v3.0/Prediction/" +
   PROJECT_ID +
-  "/classify/iterations/Iteration1/url";
+  "/classify/iterations/" +
+  ITERATION_ID +
+  "/url";
 const testUrl =
   "https://upload.wikimedia.org/wikipedia/commons/7/78/Ford_logo_1976.jpg";
 const pred_key = PREDICTION_API_KEY;
@@ -38,6 +41,7 @@ function initiateAzureConnection() {
     });
 }
 
+// call prediction API to predict vehicle model
 function predictVehicleMake() {
   fetch(predi_url, {
     method: "POST",

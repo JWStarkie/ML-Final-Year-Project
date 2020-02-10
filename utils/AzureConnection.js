@@ -9,6 +9,7 @@ import {
   IMGUR_CLIENT_ID
 } from "react-native-dotenv";
 
+import Toast from "react-native-simple-toast";
 import NavigationService from "./NavigationService";
 
 const url =
@@ -26,6 +27,7 @@ const imgur_upload_url = "https://api.imgur.com/3/upload";
 
 // upload image file to imgur host for azure prediction
 function predictVehicleMakeWithImageFile(imageData) {
+  Toast.show("Image Processing, Please Wait!", Toast.LONG);
   fetch(imgur_upload_url, {
     method: "POST",
     headers: {
@@ -35,6 +37,7 @@ function predictVehicleMakeWithImageFile(imageData) {
   })
     .then(response => response.json())
     .then(responseJson => {
+      Toast.show("Image Processed, Getting Vehicle Prediction!", Toast.LONG);
       azurePrediction(responseJson.data.link);
     })
     .catch(error => {

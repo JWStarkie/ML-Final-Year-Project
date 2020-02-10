@@ -116,9 +116,13 @@ export default class CameraFunction extends Component {
       } else {
         console.log("Predict Vehicle");
         await this.camera
-          .takePictureAsync({ skipProcessing: true })
+          .takePictureAsync({
+            quality: 0.9,
+            base64: true
+          })
           .then(data => {
-            AzureConnection.predictVehicleMake();
+            // console.log(data);
+            AzureConnection.predictVehicleMakeWithImageFile(data.base64);
             /*             NavigationService.navigate("ImagePreview", {
               imageUri: data.uri,
               totrain: this.props.navigation.state.params.trainNewVehicle

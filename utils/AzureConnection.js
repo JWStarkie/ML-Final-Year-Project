@@ -5,7 +5,8 @@ import {
   PREDICTION_API_KEY,
   END_POINT,
   PROJECT_ID,
-  ITERATION_ID
+  ITERATION_ID,
+  IMGUR_CLIENT_ID
 } from "react-native-dotenv";
 
 import NavigationService from "./NavigationService";
@@ -20,23 +21,21 @@ const predi_url =
   "/classify/iterations/" +
   ITERATION_ID +
   "/url";
-const testUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/7/78/Ford_logo_1976.jpg";
 const pred_key = PREDICTION_API_KEY;
+const imgur_upload_url = "https://api.imgur.com/3/upload";
 
-// get image tags
-function initiateAzureConnection() {
-  fetch(url, {
-    method: "GET",
+// upload image file to imgur host for azure prediction
+function predictVehicleMakeWithImageFile(imageData) {
+  fetch(imgur_upload_url, {
+    method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Training-Key": key
-    }
+      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
+    },
+    body: imageData
   })
     .then(response => response.json())
     .then(responseJson => {
-      console.log(responseJson);
-      uploadImageForTraining(responseJson[0].id, responseJson[1].id);
+      azurePrediction(responseJson.data.link);
     })
     .catch(error => {
       console.error(error);
@@ -44,14 +43,14 @@ function initiateAzureConnection() {
 }
 
 // call prediction API to predict vehicle model
-function predictVehicleMake() {
+function azurePrediction(imageUrl) {
   fetch(predi_url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Prediction-Key": pred_key
     },
-    body: JSON.stringify({ Url: testUrl })
+    body: JSON.stringify({ Url: imageUrl })
   })
     .then(response => response.json())
     .then(responseJson => {
@@ -78,6 +77,25 @@ function predictVehicleMake() {
     });
 }
 
+// get image tags
+function initiateAzureConnection() {
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Training-Key": key
+    }
+  })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log(responseJson);
+      uploadImageForTraining(responseJson[0].id, responseJson[1].id);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
 function uploadImageForTraining(ford_tag, vw_tag) {
   console.log("Ford: " + ford_tag + " VW: " + vw_tag);
 }
@@ -85,7 +103,8 @@ function uploadImageForTraining(ford_tag, vw_tag) {
 // add other navigation functions that you need and export them
 
 export default {
+  predictVehicleMakeWithImageFile,
+  azurePrediction,
   initiateAzureConnection,
-  predictVehicleMake,
   uploadImageForTraining
 };

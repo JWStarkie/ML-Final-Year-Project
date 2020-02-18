@@ -17,8 +17,8 @@ import ImagePreview from "./components/ImagePreview";
 const PageStack = createStackNavigator(
   {
     Main: Main,
-    NotFound: NotFound,
     ML: ML,
+    NotFound: NotFound,
     AR: AR,
     CameraFunction: CameraFunction,
     ImagePreview: ImagePreview
@@ -29,7 +29,7 @@ const PageStack = createStackNavigator(
     }
   },
   {
-    intitialRouteName: "Main"
+    intitialRouteName: "ML"
   }
 );
 

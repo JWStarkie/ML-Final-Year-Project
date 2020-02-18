@@ -1,7 +1,13 @@
 "use strict";
 
 import React, { Component } from "react";
-import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
 import { Camera } from "expo-camera";
 
 import { FontAwesome } from "@expo/vector-icons";
@@ -58,43 +64,54 @@ export default class CameraFunction extends Component {
             style={{ flex: 1 }}
             type={this.type}
           >
-            <View
+            <View style={styles.overlayStyle}>
+              <View
+                style={[
+                  { flex: 1 },
+                  styles.overlayHeaderFooter,
+                  styles.overlayColor
+                ]}
+              />
+              <View style={{ flex: 2, flexDirection: "row" }}>
+                <View style={[{ width: "50%" }, styles.overlayColor]} />
+                <View style={styles.overlayTransparent} />
+                <View style={[{ width: "50%" }, styles.overlayColor]} />
+              </View>
+              <View
+                style={[
+                  { flex: 1 },
+                  styles.overlayHeaderFooter,
+                  styles.overlayColor
+                ]}
+              />
+            </View>
+            <TouchableOpacity
               style={{
                 flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
                 backgroundColor: "transparent",
-                flexDirection: "row",
-                justifyContent: "center",
-                margin: 25
+                marginBottom: 20
               }}
+              onPress={this.takePicture}
             >
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                  marginBottom: 5
-                }}
-                onPress={this.takePicture}
-              >
-                {this.state.processing ? (
-                  <ActivityIndicator
-                    size="large"
-                    color="#0000ff"
-                    animating={this.state.processing}
-                  />
-                ) : null}
-                <FontAwesome
-                  name="camera"
-                  style={{
-                    color: "#fff",
-                    fontSize: 40,
-                    backgroundColor: "#000",
-                    padding: 10
-                  }}
+              {this.state.processing ? (
+                <ActivityIndicator
+                  size="large"
+                  color="#0000ff"
+                  animating={this.state.processing}
                 />
-              </TouchableOpacity>
-            </View>
+              ) : null}
+              <FontAwesome
+                name="camera"
+                style={{
+                  color: "#fff",
+                  fontSize: 40,
+                  backgroundColor: "#000",
+                  padding: 10
+                }}
+              />
+            </TouchableOpacity>
           </Camera>
         </View>
       );
@@ -132,3 +149,27 @@ export default class CameraFunction extends Component {
     }
   };
 }
+
+const styles = StyleSheet.create({
+  overlayStyle: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    height: "100%",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-around"
+  },
+  overlayTransparent: {
+    width: 300,
+    borderColor: "white",
+    backgroundColor: "transparent",
+    borderWidth: 3
+  },
+  overlayColor: {
+    backgroundColor: "rgba(0,0,0,0.6)"
+  },
+  overlayHeaderFooter: {
+    width: "100%"
+  }
+});

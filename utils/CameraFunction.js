@@ -34,20 +34,8 @@ export default class CameraFunction extends Component {
       return <View />;
     } else if (hasPermission === false) {
       return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "#333",
-              marginBottom: 5
-            }}
-          >
+        <View style={styles.viewOne}>
+          <Text style={styles.textOne}>
             No authorisation to access to camera, please give this application
             permission to continue!! You must now do this through your setting
             or restart the application!!
@@ -65,34 +53,16 @@ export default class CameraFunction extends Component {
             type={this.type}
           >
             <View style={styles.overlayStyle}>
-              <View
-                style={[
-                  { flex: 1 },
-                  styles.overlayHeaderFooter,
-                  styles.overlayColor
-                ]}
-              />
-              <View style={{ flex: 2, flexDirection: "row" }}>
-                <View style={[{ width: "50%" }, styles.overlayColor]} />
+              <View style={styles.overlayHeaderFooter} />
+              <View style={styles.overlayMiddle}>
+                <View style={styles.overlayMiddleSides} />
                 <View style={styles.overlayTransparent} />
-                <View style={[{ width: "50%" }, styles.overlayColor]} />
+                <View style={styles.overlayMiddleSides} />
               </View>
-              <View
-                style={[
-                  { flex: 1 },
-                  styles.overlayHeaderFooter,
-                  styles.overlayColor
-                ]}
-              />
+              <View style={styles.overlayHeaderFooter} />
             </View>
             <TouchableOpacity
-              style={{
-                flex: 1,
-                justifyContent: "flex-end",
-                alignItems: "center",
-                backgroundColor: "transparent",
-                marginBottom: 20
-              }}
+              style={styles.touchable}
               onPress={this.takePicture}
             >
               {this.state.processing ? (
@@ -102,15 +72,7 @@ export default class CameraFunction extends Component {
                   animating={this.state.processing}
                 />
               ) : null}
-              <FontAwesome
-                name="camera"
-                style={{
-                  color: "#fff",
-                  fontSize: 40,
-                  backgroundColor: "#000",
-                  padding: 10
-                }}
-              />
+              <FontAwesome name="camera" style={styles.fontA} />
             </TouchableOpacity>
           </Camera>
         </View>
@@ -151,6 +113,16 @@ export default class CameraFunction extends Component {
 }
 
 const styles = StyleSheet.create({
+  viewOne: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  textOne: {
+    textAlign: "center",
+    color: "#333",
+    marginBottom: 5
+  },
   overlayStyle: {
     position: "absolute",
     left: 0,
@@ -166,10 +138,30 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 3
   },
-  overlayColor: {
+  overlayMiddle: {
+    flex: 2,
+    flexDirection: "row"
+  },
+  overlayMiddleSides: {
+    width: "50%",
     backgroundColor: "rgba(0,0,0,0.6)"
   },
   overlayHeaderFooter: {
-    width: "100%"
+    flex: 1,
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.6)"
+  },
+  touchable: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "transparent",
+    marginBottom: 20
+  },
+  fontA: {
+    color: "#fff",
+    fontSize: 40,
+    backgroundColor: "#000",
+    padding: 10
   }
 });

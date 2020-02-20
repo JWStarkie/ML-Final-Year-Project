@@ -20,7 +20,8 @@ export default class CameraFunction extends Component {
   state = {
     hasPermission: null,
     type: Camera.Constants.Type.back,
-    processing: null
+    processing: null,
+    makePredicted: false
   };
 
   async componentDidMount() {
@@ -29,6 +30,9 @@ export default class CameraFunction extends Component {
   }
 
   render() {
+    if (this.props.navigation.state.params.makePredicted) {
+      this.setState({ makePredicted: true });
+    }
     const { hasPermission } = this.state;
     if (hasPermission === null) {
       return <View />;
@@ -63,7 +67,8 @@ export default class CameraFunction extends Component {
             </View>
             <TouchableOpacity
               style={styles.touchable}
-              onPress={this.takePicture}
+              onPress={() => this._handleclick()}
+              disabled={this.state.processing}
             >
               {this.state.processing ? (
                 <ActivityIndicator
@@ -79,8 +84,52 @@ export default class CameraFunction extends Component {
       );
     }
   }
-  takePicture = async () => {
+
+  _handleclick() {
+    console.log(this.state.makePredicted);
+    if (!this.state.makePredicted) {
+      this.takePictureMake();
+      // console.log("Hosted URL = " + hostedImageUrl);
+      // console.log("PredictionResponse = " + predictionResponse);
+      // Thing to be done next - modal pop-up
+    } else {
+      this.takePictureModel();
+    }
+  }
+
+  takePictureMake = async () => {
+    console.log("takePictureMake");
     this.setState({ processing: true });
+    if (this.camera) {
+      if (this.props.navigation.state.params.trainNewVehicle) {
+        console.log("Train new vehicle");
+        await this.camera
+          .takePictureAsync({ skipProcessing: true })
+          .then(data => {
+            NavigationService.navigate("ImagePreview", {
+              imageUri: data.uri,
+              totrain: this.props.navigation.state.params.trainNewVehicle
+            });
+          });
+      } else {
+        console.log("Predict Vehicle");
+        await this.camera
+          .takePictureAsync({
+            quality: 0.9,
+            base64: true
+          })
+          .then(data => {
+            AzureConnection.handleAzure(data.base64);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    }
+  };
+  takePictureModel = async () => {
+    console.log("takePictureModel");
+    /*  this.setState({ processing: true });
     if (this.camera) {
       if (this.props.navigation.state.params.trainNewVehicle) {
         console.log("Train new vehicle");
@@ -102,13 +151,13 @@ export default class CameraFunction extends Component {
           .then(data => {
             // console.log(data);
             AzureConnection.predictVehicleMakeWithImageFile(data.base64);
-            /*             NavigationService.navigate("ImagePreview", {
-              imageUri: data.uri,
-              totrain: this.props.navigation.state.params.trainNewVehicle
-            }); */
+            //             NavigationService.navigate("ImagePreview", {
+            //   imageUri: data.uri,
+            //   totrain: this.props.navigation.state.params.trainNewVehicle
+            // });
           });
       }
-    }
+    } */
   };
 }
 

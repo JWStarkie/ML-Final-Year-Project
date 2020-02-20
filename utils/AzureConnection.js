@@ -25,63 +25,86 @@ const predi_url =
 const pred_key = PREDICTION_API_KEY;
 const imgur_upload_url = "https://api.imgur.com/3/upload";
 
+async function handleAzure(imageData) {
+  let response1 = await predictVehicleMakeWithImageFile(imageData);
+  console.log(response1.data.link);
+  let response2 = await azurePrediction(response1.data.link);
+  console.log(response2);
+}
+
 // upload image file to imgur host for azure prediction
 function predictVehicleMakeWithImageFile(imageData) {
   Toast.show("Image Processing, Please Wait!", Toast.LONG);
-  fetch(imgur_upload_url, {
-    method: "POST",
-    headers: {
-      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
-    },
-    body: imageData
-  })
-    .then(response => response.json())
-    .then(responseJson => {
-      Toast.show("Image Processed, Getting Vehicle Prediction!", Toast.LONG);
-      azurePrediction(responseJson.data.link);
+  return (
+    fetch(imgur_upload_url, {
+      method: "POST",
+      headers: {
+        Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
+      },
+      body: imageData
     })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => {
+        return response.json();
+      })
+      // .then(responseJson => {
+      //   const imageUrlResponse = responseJson.data.link;
+      //   Toast.show("Image Processed, Getting Vehicle Prediction!", Toast.LONG);
+      //   const response = azurePrediction(responseJson.data.link).then(data => {
+      //     console.log("image url " + imageUrlResponse);
+      //     console.log("prediction response " + response);
+      //   });
+      //   // return { url2: imageUrlResponse, pred: predictResponse };
+      // })
+      .catch(error => {
+        console.error(error);
+      })
+  );
 }
 
 // call prediction API to predict vehicle model
 function azurePrediction(imageUrl) {
-  fetch(predi_url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Prediction-Key": pred_key
-    },
-    body: JSON.stringify({ Url: imageUrl })
-  })
-    .then(response => response.json())
-    .then(responseJson => {
-      console.log(responseJson.predictions);
-      let i;
-      for (i in responseJson.predictions) {
-        if (responseJson.predictions[i].probability > 0.9) {
-          console.log(
-            responseJson.predictions[i].probability * 100 +
-              "% chance it's a " +
-              responseJson.predictions[i].tagName
-          );
-          NavigationService.navigate("AR", {
-            probability: responseJson.predictions[i].probability * 100,
-            classification: responseJson.predictions[i].tagName
-          });
-        } else {
-          NavigationService.navigate("AR");
-        }
-      }
+  Toast.show("Image Processed, Getting Vehicle Prediction!", Toast.LONG);
+  return (
+    fetch(predi_url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Prediction-Key": pred_key
+      },
+      body: JSON.stringify({ Url: imageUrl })
     })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => {
+        return response.json();
+      })
+      // .then(responseJson => {
+      //   console.log(responseJson.predictions[0].tagName);
+      //   /* let i;
+      //   for (i in responseJson.predictions) {
+      //     if (responseJson.predictions[i].probability > 0.9) {
+      //       console.log(
+      //         responseJson.predictions[i].probability * 100 +
+      //           "% chance it's a " +
+      //           responseJson.predictions[i].tagName
+      //       );
+      //       NavigationService.navigate("AR", {
+      //         probability: responseJson.predictions[i].probability * 100,
+      //         classification: responseJson.predictions[i].tagName
+      //       });
+      //     } else {
+      //       NavigationService.navigate("AR");
+      //     }
+      //   } */
+      //   // const predictResponse = responseJson.predictions[0].tagName;
+      //   // return predictResponse;
+      // })
+      .catch(error => {
+        console.error(error);
+      })
+  );
 }
 
 // get image tags
-function initiateAzureConnection() {
+function getImageTags() {
   fetch(url, {
     method: "GET",
     headers: {
@@ -106,8 +129,9 @@ function uploadImageForTraining(ford_tag, vw_tag) {
 // add other navigation functions that you need and export them
 
 export default {
+  handleAzure,
   predictVehicleMakeWithImageFile,
   azurePrediction,
-  initiateAzureConnection,
+  getImageTags,
   uploadImageForTraining
 };

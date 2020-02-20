@@ -30,6 +30,10 @@ async function handleAzure(imageData) {
   console.log(response1.data.link);
   let response2 = await azurePrediction(response1.data.link);
   console.log(response2);
+  return {
+    response1: response1.data.link,
+    response2: response2.predictions[0].tagName
+  };
 }
 
 // upload image file to imgur host for azure prediction

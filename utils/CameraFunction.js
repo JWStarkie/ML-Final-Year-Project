@@ -86,11 +86,9 @@ export default class CameraFunction extends Component {
   }
 
   _handleclick() {
-    console.log(this.state.makePredicted);
+    console.log("makePredicted = " + this.state.makePredicted);
     if (!this.state.makePredicted) {
       this.takePictureMake();
-      // console.log("Hosted URL = " + hostedImageUrl);
-      // console.log("PredictionResponse = " + predictionResponse);
       // Thing to be done next - modal pop-up
     } else {
       this.takePictureModel();
@@ -119,7 +117,16 @@ export default class CameraFunction extends Component {
             base64: true
           })
           .then(data => {
-            AzureConnection.handleAzure(data.base64);
+            AzureConnection.handleAzure(data.base64).then(data => {
+              console.log("we're here.");
+              console.log(data);
+              console.log("Now here..");
+              NavigationService.navigate("ResultsPage", {
+                imageUrl: data.response1,
+                prediction: data.response2
+              });
+              return data;
+            });
           })
           .catch(error => {
             console.error(error);

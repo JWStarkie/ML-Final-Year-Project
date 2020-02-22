@@ -1,4 +1,4 @@
-// code source: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
+// code source: https://v1.reactnavigation.org/docs/navigating-without-navigation-prop.html
 "use strict";
 
 import { NavigationActions } from "react-navigation";

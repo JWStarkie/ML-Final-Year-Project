@@ -13,14 +13,16 @@ import NotFound from "./components/NotFound";
 import ML from "./components/ML";
 import AR from "./components/AR";
 import ImagePreview from "./components/ImagePreview";
+import ResultsPage from "./components/ResultsPage";
 
 const PageStack = createStackNavigator(
   {
     Main: Main,
     ML: ML,
+    CameraFunction: CameraFunction,
+    ResultsPage: ResultsPage,
     NotFound: NotFound,
     AR: AR,
-    CameraFunction: CameraFunction,
     ImagePreview: ImagePreview
   },
   {
@@ -29,7 +31,7 @@ const PageStack = createStackNavigator(
     }
   },
   {
-    intitialRouteName: "ML"
+    intitialRouteName: "Main"
   }
 );
 

@@ -6,6 +6,7 @@ import ViewPager from "@react-native-community/viewpager";
 import Dots from "react-native-dots-pagination";
 import { FontAwesome } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
+import NavigationService from "utils/NavigationService.js";
 
 import logo from "assets/icon.png";
 
@@ -75,7 +76,11 @@ export default class Main extends Component {
                 title="To Camera Set-up  "
                 type="solid"
                 raised={true}
-                onPress={() => this.props.navigation.navigate("ML")}
+                onPress={() =>
+                  NavigationService.navigate("CameraFunction", {
+                    trainNewVehicle: false
+                  })
+                }
               />
             </View>
           </View>
